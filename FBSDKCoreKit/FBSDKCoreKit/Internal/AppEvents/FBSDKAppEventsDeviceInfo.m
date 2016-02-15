@@ -65,7 +65,7 @@ CGFloat _density;
 
 // Other state
 long _lastGroup1CheckTime;
-BOOL _isEncodingDirty = YES;
+BOOL _isEncodingReallyDirty = YES;
 NSString *_encodedDeviceInfo;
 static FBSDKAppEventsDeviceInfo *g_singleton;
 
@@ -102,9 +102,9 @@ static FBSDKAppEventsDeviceInfo *g_singleton;
             [self _collectGroup1Data];
         }
 
-        if (_isEncodingDirty) {
+        if (_isEncodingReallyDirty) {
             self.encodedDeviceInfo = [self _generateEncoding];
-            _isEncodingDirty = NO;
+            _isEncodingReallyDirty = NO;
         }
 
         return _encodedDeviceInfo;
@@ -164,14 +164,14 @@ static FBSDKAppEventsDeviceInfo *g_singleton;
     NSString *newCarrierName = [FBSDKAppEventsDeviceInfo _getCarrier];
     if (![newCarrierName isEqualToString:_carrierName]) {
         _carrierName = newCarrierName;
-        _isEncodingDirty = YES;
+        _isEncodingReallyDirty = YES;
     }
 
     // Time zone
     NSString *newTimeZoneAbbrev = [[NSTimeZone systemTimeZone] abbreviation];
     if (![newTimeZoneAbbrev isEqualToString:_timeZoneAbbrev]) {
         _timeZoneAbbrev = newTimeZoneAbbrev;
-        _isEncodingDirty = YES;
+        _isEncodingReallyDirty = YES;
     }
 
     // Remaining disk space
@@ -179,7 +179,7 @@ static FBSDKAppEventsDeviceInfo *g_singleton;
     unsigned long long newRemainingDiskSpaceGB = (unsigned long long)round(remainingDiskSpace / FB_GIGABYTE);
     if (_remainingDiskSpaceGB != newRemainingDiskSpaceGB) {
         _remainingDiskSpaceGB = newRemainingDiskSpaceGB;
-        _isEncodingDirty = YES;
+        _isEncodingReallyDirty = YES;
     }
 
     _lastGroup1CheckTime = [FBSDKAppEventsUtility unixTimeNow];
